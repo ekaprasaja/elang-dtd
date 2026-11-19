@@ -29,6 +29,7 @@ const POPULAR_CALEG = [
 ];
 
 const PARTAI_LIST = [
+  'Partai Elang',
   'Gerindra',
   'Golkar',
   'PDI-P',
@@ -70,11 +71,12 @@ export const VolunteerInputView: React.FC = () => {
   const [suku, setSuku] = useState('Melayu');
   const [jumlahPemilih, setJumlahPemilih] = useState<number>(3);
   const [tingkatYakin, setTingkatYakin] = useState('Sangat Yakin');
-  const [partai, setPartai] = useState('Gerindra');
-  const [namaCaleg, setNamaCaleg] = useState('Meireza Endipat Wijaya');
+  const [partai, setPartai] = useState('Partai Elang');
+  const [namaCaleg, setNamaCaleg] = useState('Kader Partai Elang');
   const [pernahTahuCaleg, setPernahTahuCaleg] = useState(true);
   const [memilihLangsung, setMemilihLangsung] = useState(true);
   const [memilihVisiMisi, setMemilihVisiMisi] = useState(true);
+  const [showVisiMisiGuide, setShowVisiMisiGuide] = useState(false);
   const [menjadiRelawan, setMenjadiRelawan] = useState(false);
   const [capres3Way, setCapres3Way] = useState('Prabowo');
   const [capresAvsP, setCapresAvsP] = useState('Prabowo');
@@ -537,15 +539,61 @@ export const VolunteerInputView: React.FC = () => {
               />
             </label>
 
-            <label className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition">
-              <span className="text-slate-300">Memilih berdasarkan visi-misi?</span>
-              <input
-                type="checkbox"
-                checked={memilihVisiMisi}
-                onChange={(e) => setMemilihVisiMisi(e.target.checked)}
-                className="w-4 h-4 accent-emerald-500 rounded"
-              />
-            </label>
+            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setMemilihVisiMisi(!memilihVisiMisi)}>
+                <span className="text-slate-300">Memilih berdasarkan visi-misi?</span>
+                <input
+                  type="checkbox"
+                  checked={memilihVisiMisi}
+                  onChange={(e) => setMemilihVisiMisi(e.target.checked)}
+                  className="w-4 h-4 accent-emerald-500 rounded"
+                />
+              </div>
+
+              {/* Official Talking Points Helper Button */}
+              <div className="pt-1 border-t border-slate-900 flex items-center justify-between">
+                <span className="text-[11px] text-slate-500">Materi resmi Partai Elang:</span>
+                <button
+                  type="button"
+                  onClick={() => setShowVisiMisiGuide(!showVisiMisiGuide)}
+                  className="text-[11px] text-amber-400 hover:text-amber-300 underline font-medium"
+                >
+                  {showVisiMisiGuide ? 'Tutup Materi Panduan' : 'Lihat Visi & Misi Resmi'}
+                </button>
+              </div>
+
+              {showVisiMisiGuide && (
+                <div className="mt-2 p-3 rounded-lg bg-amber-950/20 border border-amber-500/30 text-xs text-slate-300 space-y-2 animate-fade-in">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-amber-400">PARTAI ELANG</span>
+                    <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">
+                      partaielang.id/about
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 italic">
+                    &quot;Gerakan Politik Kebangsaan Untuk Indonesia — Bersama, Kita Bisa!&quot;
+                  </p>
+                  <div>
+                    <span className="font-semibold text-white">Visi Resmi:</span>
+                    <p className="text-[11px] text-slate-400">
+                      Terwujudnya Cita-cita Perubahan Indonesia.
+                    </p>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-white">4 Misi Pokok Perjuangan:</span>
+                    <ol className="list-decimal list-inside text-[11px] text-slate-400 space-y-1 mt-0.5">
+                      <li>Terwujudnya cita-cita nasional bangsa dalam Pembukaan UUD 1945.</li>
+                      <li>Terwujudnya masyarakat demokratis adil, sejahtera & berketuhanan dalam bingkai NKRI.</li>
+                      <li>Kedaulatan rakyat dalam berdemokrasi yang menjunjung kebenaran dan hukum.</li>
+                      <li>Mewujudkan ekonomi kerakyatan yang berkeadilan.</li>
+                    </ol>
+                  </div>
+                  <div className="pt-1 border-t border-amber-500/20 text-[10px] text-amber-400/80">
+                    Fokus: Kaderisasi • Jangkauan: Nasional • Karakter: Kolaboratif
+                  </div>
+                </div>
+              )}
+            </div>
 
             <label className="flex items-center justify-between p-3 bg-emerald-950/40 rounded-xl border border-emerald-500/40 cursor-pointer hover:border-emerald-500 transition">
               <span className="text-emerald-300 font-bold">Bersedia menjadi Tim Relawan?</span>

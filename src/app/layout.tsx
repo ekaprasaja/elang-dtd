@@ -26,8 +26,8 @@ export default function RootLayout({
             </main>
             <footer className="border-t border-slate-900 bg-slate-950/90 text-slate-500 text-xs py-4 text-center">
               <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-                <span>© 2026 Elang DTD • Sistem Monitoring Elektoral Door-to-Door</span>
-                <span className="text-[11px] text-slate-600 font-mono">Keamanan NIK Terenkripsi AES-256-GCM • Patuh UU No. 27/2022 (UU PDP)</span>
+                <span>© 2026 Partai Elang • Gerakan Politik Kebangsaan Untuk Indonesia</span>
+                <span className="text-[11px] text-slate-600 font-mono">Keamanan Data Terenkripsi • Sistem DTD Resmi Kader</span>
               </div>
             </footer>
           </div>
