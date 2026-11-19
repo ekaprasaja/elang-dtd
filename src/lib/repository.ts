@@ -23,7 +23,7 @@ export const initialProfiles: UserProfile[] = [
   {
     id: 'usr-admin-dtd',
     email: 'admin@elangdtd.id',
-    nama: 'Eka Prasaja (Administrator)',
+    nama: 'Bambang Wicaksono (Administrator)',
     role: 'ADMIN',
     phone: '081288880001',
     assignedWilayah: 'Seluruh Kepulauan Riau',
@@ -368,13 +368,13 @@ export const dtdRepository = {
 
     // Default sample if empty
     if (Object.keys(calegCounts).length === 0) {
-      calegCounts['Meireza Endipat Wijaya'] = 14;
-      calegCounts['Rudi'] = 9;
-      calegCounts['Cen Sui Lan'] = 6;
-      calegCounts['Sturman Panjaitan'] = 5;
-      calegCounts['Suryani'] = 4;
-      calegCounts['Rizki Faisal'] = 3;
-      calegCounts['Sirajudin Nur'] = 2;
+      calegCounts['Arya Pratama'] = 14;
+      calegCounts['Dewi Anggraini'] = 9;
+      calegCounts['dr. Budi Santoso'] = 6;
+      calegCounts['Rian Hidayat'] = 5;
+      calegCounts['Kusuma Wardana'] = 4;
+      calegCounts['Hendro Saputro'] = 3;
+      calegCounts['Siti Rahmawati'] = 2;
     }
 
     const wordCloud: WordCloudItem[] = Object.entries(calegCounts)
@@ -420,7 +420,10 @@ export const dtdRepository = {
       const counts: Record<string, number> = {};
       candidates.forEach((c) => (counts[c] = 0));
       rows.forEach((r) => {
-        const val = r[field];
+        let val = r[field];
+        if (val === 'Prabowo') val = 'Kandidat Garuda';
+        if (val === 'Anies') val = 'Kandidat Nusantara';
+        if (val === 'Ganjar') val = 'Kandidat Ksatria';
         if (val && counts[val] !== undefined) {
           counts[val]++;
         }
@@ -434,9 +437,9 @@ export const dtdRepository = {
     };
 
     return {
-      threeWay: calcDistribution('pilihan_capres_anies_ganjar_prabowo', ['Prabowo', 'Anies', 'Ganjar']),
-      aniesVsPrabowo: calcDistribution('pilihan_capres_anies_prabowo', ['Prabowo', 'Anies']),
-      ganjarVsPrabowo: calcDistribution('pilihan_capres_ganjar_prabowo', ['Prabowo', 'Ganjar']),
+      threeWay: calcDistribution('pilihan_capres_anies_ganjar_prabowo', ['Kandidat Garuda', 'Kandidat Nusantara', 'Kandidat Ksatria']),
+      aniesVsPrabowo: calcDistribution('pilihan_capres_anies_prabowo', ['Kandidat Garuda', 'Kandidat Nusantara']),
+      ganjarVsPrabowo: calcDistribution('pilihan_capres_ganjar_prabowo', ['Kandidat Garuda', 'Kandidat Ksatria']),
     };
   },
 
@@ -714,7 +717,7 @@ export const dtdRepository = {
     ];
     capres.threeWay.forEach((c) => {
       sheet3.addRow({
-        simulasi: '3 Poros (Prabowo - Anies - Ganjar)',
+        simulasi: '3 Poros (Kandidat Garuda - Nusantara - Ksatria)',
         name: c.name,
         count: c.count,
         percentage: `${c.percentage}%`,

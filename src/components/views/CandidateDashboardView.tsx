@@ -158,12 +158,12 @@ export const CandidateDashboardView: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Simulation A: 3-Way (Prabowo vs Anies vs Ganjar) */}
+          {/* Simulation A: 3-Way (Kandidat Garuda vs Nusantara vs Ksatria) */}
           <div className="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-white">Simulasi 3 Poros</h4>
               <span className="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                Pilpres Umum
+                Pilihan Poros
               </span>
             </div>
 
@@ -177,11 +177,11 @@ export const CandidateDashboardView: React.FC = () => {
                   <div className="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${
-                        cand.name === 'Prabowo'
+                        cand.name.includes('Garuda')
                           ? 'bg-emerald-500'
-                          : cand.name === 'Anies'
-                          ? 'bg-blue-500'
-                          : 'bg-rose-500'
+                          : cand.name.includes('Nusantara')
+                          ? 'bg-amber-500'
+                          : 'bg-sky-500'
                       }`}
                       style={{ width: `${cand.percentage}%` }}
                     />
@@ -191,12 +191,12 @@ export const CandidateDashboardView: React.FC = () => {
             </div>
           </div>
 
-          {/* Simulation B: Head-to-Head Anies vs Prabowo */}
+          {/* Simulation B: Head-to-Head Nusantara vs Garuda */}
           <div className="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-white">Head-to-Head 1</h4>
-              <span className="text-[10px] text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/30">
-                Anies vs Prabowo
+              <span className="text-[10px] text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+                Nusantara vs Garuda
               </span>
             </div>
 
@@ -210,7 +210,7 @@ export const CandidateDashboardView: React.FC = () => {
                   <div className="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${
-                        cand.name === 'Prabowo' ? 'bg-emerald-500' : 'bg-blue-500'
+                        cand.name.includes('Garuda') ? 'bg-emerald-500' : 'bg-amber-500'
                       }`}
                       style={{ width: `${cand.percentage}%` }}
                     />
@@ -220,12 +220,12 @@ export const CandidateDashboardView: React.FC = () => {
             </div>
           </div>
 
-          {/* Simulation C: Head-to-Head Ganjar vs Prabowo */}
+          {/* Simulation C: Head-to-Head Ksatria vs Garuda */}
           <div className="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-white">Head-to-Head 2</h4>
-              <span className="text-[10px] text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-500/30">
-                Ganjar vs Prabowo
+              <span className="text-[10px] text-sky-400 bg-sky-950/60 px-2 py-0.5 rounded border border-sky-500/30">
+                Ksatria vs Garuda
               </span>
             </div>
 
@@ -239,7 +239,7 @@ export const CandidateDashboardView: React.FC = () => {
                   <div className="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${
-                        cand.name === 'Prabowo' ? 'bg-emerald-500' : 'bg-rose-500'
+                        cand.name.includes('Garuda') ? 'bg-emerald-500' : 'bg-sky-500'
                       }`}
                       style={{ width: `${cand.percentage}%` }}
                     />

@@ -18,14 +18,14 @@ import {
 import confetti from 'canvas-confetti';
 
 const POPULAR_CALEG = [
-  'Meireza Endipat Wijaya (Gerindra)',
-  'H. Muhammad Rudi (NasDem)',
-  'Cen Sui Lan (Golkar)',
-  'Mayjen TNI (Purn) Sturman Panjaitan (PDI-P)',
-  'Suryani, S.E. (PKS)',
-  'Rizki Faisal (Golkar)',
-  'Sirajudin Nur (PKB)',
-  'Nyat Kadir (NasDem)',
+  'Arya Pratama (Partai Elang)',
+  'Hj. Dewi Anggraini (Partai Elang)',
+  'dr. Budi Santoso (Partai Elang)',
+  'Rian Hidayat (Partai Elang)',
+  'Kusuma Wardana (Kandidat A)',
+  'Bambang Wicaksono (Kandidat B)',
+  'Siti Rahmawati (Kandidat C)',
+  'Hendro Saputro (Kandidat D)',
 ];
 
 const PARTAI_LIST = [
@@ -72,15 +72,15 @@ export const VolunteerInputView: React.FC = () => {
   const [jumlahPemilih, setJumlahPemilih] = useState<number>(3);
   const [tingkatYakin, setTingkatYakin] = useState('Sangat Yakin');
   const [partai, setPartai] = useState('Partai Elang');
-  const [namaCaleg, setNamaCaleg] = useState('Kader Partai Elang');
+  const [namaCaleg, setNamaCaleg] = useState('Arya Pratama (Partai Elang)');
   const [pernahTahuCaleg, setPernahTahuCaleg] = useState(true);
   const [memilihLangsung, setMemilihLangsung] = useState(true);
   const [memilihVisiMisi, setMemilihVisiMisi] = useState(true);
   const [showVisiMisiGuide, setShowVisiMisiGuide] = useState(false);
   const [menjadiRelawan, setMenjadiRelawan] = useState(false);
-  const [capres3Way, setCapres3Way] = useState('Prabowo');
-  const [capresAvsP, setCapresAvsP] = useState('Prabowo');
-  const [capresGvsP, setCapresGvsP] = useState('Prabowo');
+  const [capres3Way, setCapres3Way] = useState('Kandidat Garuda');
+  const [capresAvsP, setCapresAvsP] = useState('Kandidat Garuda');
+  const [capresGvsP, setCapresGvsP] = useState('Kandidat Garuda');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<{ name: string; maskedNik: string } | null>(null);
@@ -635,9 +635,9 @@ export const VolunteerInputView: React.FC = () => {
 
           <div className="space-y-2.5">
             <div>
-              <p className="text-slate-300 font-semibold mb-1">Simulasi 3 Nama (Anies vs Ganjar vs Prabowo)</p>
+              <p className="text-slate-300 font-semibold mb-1">Simulasi 3 Poros (Kandidat Garuda vs Nusantara vs Ksatria)</p>
               <div className="grid grid-cols-3 gap-2">
-                {['Prabowo', 'Anies', 'Ganjar'].map((c) => (
+                {['Kandidat Garuda', 'Kandidat Nusantara', 'Kandidat Ksatria'].map((c) => (
                   <button
                     key={c}
                     type="button"
@@ -656,9 +656,9 @@ export const VolunteerInputView: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <p className="text-slate-300 font-semibold mb-1">Head-to-Head: Anies vs Prabowo</p>
+                <p className="text-slate-300 font-semibold mb-1">Head-to-Head: Nusantara vs Garuda</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {['Prabowo', 'Anies'].map((c) => (
+                  {['Kandidat Garuda', 'Kandidat Nusantara'].map((c) => (
                     <button
                       key={c}
                       type="button"
@@ -676,9 +676,9 @@ export const VolunteerInputView: React.FC = () => {
               </div>
 
               <div>
-                <p className="text-slate-300 font-semibold mb-1">Head-to-Head: Ganjar vs Prabowo</p>
+                <p className="text-slate-300 font-semibold mb-1">Head-to-Head: Ksatria vs Garuda</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {['Prabowo', 'Ganjar'].map((c) => (
+                  {['Kandidat Garuda', 'Kandidat Ksatria'].map((c) => (
                     <button
                       key={c}
                       type="button"
