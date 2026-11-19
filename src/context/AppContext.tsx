@@ -82,6 +82,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     loadSession();
     refreshSurveys();
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as any;
+      if (
+        tabParam &&
+        ['input', 'wilayah', 'kandidat', 'total', 'responden', 'surveys'].includes(tabParam)
+      ) {
+        setActiveTab(tabParam);
+      }
+    }
   }, []);
 
   return (

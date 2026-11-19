@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
 import {
   Smartphone,
@@ -12,6 +13,8 @@ import {
 } from 'lucide-react';
 
 export const Navigation: React.FC = () => {
+  const router = useRouter();
+  const pathname = usePathname();
   const { activeTab, setActiveTab, currentUser } = useApp();
 
   const isAdmin = currentUser?.role === 'ADMIN';
@@ -29,6 +32,13 @@ export const Navigation: React.FC = () => {
       : []),
   ];
 
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId as any);
+    if (pathname !== '/') {
+      router.push(`/?tab=${tabId}`);
+    }
+  };
+
   return (
     <div className="bg-slate-950/80 border-b border-slate-800/80 sticky top-[61px] z-30 px-3 overflow-x-auto">
       <div className="max-w-7xl mx-auto flex items-center gap-1.5 py-2">
@@ -39,7 +49,7 @@ export const Navigation: React.FC = () => {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id as any)}
+              onClick={() => handleTabClick(item.id)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
                 isActive
                   ? item.highlight
