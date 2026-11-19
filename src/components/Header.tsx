@@ -35,8 +35,9 @@ export const Header: React.FC = () => {
         {/* Brand & Active Survey */}
         <div className="flex items-center justify-between w-full md:w-auto gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-green-700 flex items-center justify-center text-slate-950 shadow-lg shadow-emerald-500/20 font-black">
-              🦅
+            <div className="w-9 h-9 rounded-xl overflow-hidden bg-white/10 border border-emerald-500/30 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-transparent.webp" alt="Logo Partai Elang" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="flex items-center gap-2">
