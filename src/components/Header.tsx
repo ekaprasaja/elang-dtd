@@ -16,7 +16,6 @@ import {
   MapPin,
   FolderKanban,
   Check,
-  ArrowLeft,
   Mail,
   Phone,
 } from 'lucide-react';
@@ -78,36 +77,9 @@ export const Header: React.FC = () => {
     }
   };
 
-  // Header minimal khusus di halaman Login
+  // Header disembunyikan di halaman login untuk fokus otentikasi tanpa gangguan (distraction-free login)
   if (isLoginPage) {
-    return (
-      <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl overflow-hidden bg-white/10 border border-emerald-500/30 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-transparent.webp" alt="Logo Partai Elang" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-bold text-sm tracking-wide text-white group-hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  ELANG DTD <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-semibold uppercase">Door to Door</span>
-                </h1>
-              </div>
-              <p className="text-[10px] text-slate-400">Monitoring Survei Pemilih & Tim Lapangan</p>
-            </div>
-          </Link>
-
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Kembali ke Dashboard</span>
-          </Link>
-        </div>
-      </header>
-    );
+    return null;
   }
 
   return (

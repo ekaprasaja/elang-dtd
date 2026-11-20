@@ -45,7 +45,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto py-10 sm:py-16 px-4">
+    <div className="min-h-[85vh] flex flex-col justify-center max-w-md mx-auto py-10 px-4">
       {/* Branding Card */}
       <div className="flex flex-col items-center text-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-slate-900/90 border border-amber-500/30 p-2.5 mx-auto flex items-center justify-center shadow-xl shadow-black/50 mb-3 hover:border-amber-400/50 transition">
