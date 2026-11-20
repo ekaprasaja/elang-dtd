@@ -57,7 +57,7 @@ export default function LoginPage() {
           <span>Sistem Resmi Partai Elang Indonesia</span>
         </div>
         <h1 className="text-2xl font-black text-white tracking-tight">
-          Masuk Akun Elang DTD
+          ELANG DTD
         </h1>
         <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
           Aplikasi Door-to-Door verifikasi pemilih, survei preferensi elektoral, dan audit NIK patuh UU PDP.
