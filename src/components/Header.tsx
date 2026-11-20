@@ -85,57 +85,16 @@ export const Header: React.FC = () => {
             <span>Export Excel</span>
           </a>
 
-          {/* Role Pill with Switcher */}
+          {/* User Session Pill (Secure, static badge) */}
           {currentUser && (
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileSwitcher(!showProfileSwitcher)}
-                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl transition text-left"
-              >
-                <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
-                  {currentUser.role === 'ADMIN' ? '👑' : currentUser.role === 'KOORDINATOR' ? '🎯' : currentUser.role === 'RELAWAN' ? '📱' : '👁️'}
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-xs font-semibold text-slate-200 leading-tight">{currentUser.nama}</p>
-                  <p className="text-[10px] text-emerald-400 uppercase font-bold">{currentUser.role}</p>
-                </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1" />
-              </button>
-
-              {/* Profile Switcher Menu */}
-              {showProfileSwitcher && (
-                <div className="absolute right-0 mt-2 w-72 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in space-y-1">
-                  <div className="p-2 border-b border-slate-800 text-xs">
-                    <p className="font-bold text-white">Ganti Peran / Profil Demonstrasi</p>
-                    <p className="text-[10px] text-slate-400">Pilih salah satu peran untuk menguji fitur & RBAC:</p>
-                  </div>
-                  {availableProfiles.map((p) => {
-                    const isSelected = p.id === currentUser.id;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => {
-                          switchProfile(p.id);
-                          setShowProfileSwitcher(false);
-                        }}
-                        className={`w-full text-left p-2.5 rounded-xl transition flex items-center justify-between text-xs ${
-                          isSelected
-                            ? 'bg-emerald-950/80 border border-emerald-500/40 text-white font-semibold'
-                            : 'hover:bg-slate-800 text-slate-300'
-                        }`}
-                      >
-                        <div>
-                          <p className="font-semibold text-slate-200">{p.nama}</p>
-                          <p className="text-[10px] text-emerald-400 uppercase font-mono font-bold mt-0.5">
-                            {p.role} • {p.assignedWilayah || 'Wilayah'}
-                          </p>
-                        </div>
-                        {isSelected && <Check className="w-4 h-4 text-emerald-400" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+            <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-left">
+              <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
+                {currentUser.role === 'ADMIN' ? '👑' : currentUser.role === 'KOORDINATOR' ? '🎯' : currentUser.role === 'RELAWAN' ? '📱' : '👁️'}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-xs font-semibold text-slate-200 leading-tight">{currentUser.nama}</p>
+                <p className="text-[10px] text-emerald-400 uppercase font-bold">{currentUser.role}</p>
+              </div>
             </div>
           )}
         </div>
