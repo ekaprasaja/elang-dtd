@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { setSessionUser } from '@/lib/session';
 import { initialProfiles } from '@/lib/repository';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,9 +16,45 @@ export async function POST(req: NextRequest) {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const targetUser = initialProfiles.find((u) => u.email.toLowerCase() === cleanEmail);
+    let targetUser = initialProfiles.find((u) => u.email.toLowerCase() === cleanEmail);
 
-    if (!targetUser || !targetUser.password || targetUser.password !== password) {
+    // Verify against Supabase dtd_profiles table (Production Database)
+    if (supabase) {
+      const { data: dbUser, error } = await supabase
+        .from('dtd_profiles')
+        .select('*')
+        .ilike('email', cleanEmail)
+        .maybeSingle();
+
+      if (!error && dbUser) {
+        if (dbUser.password_hash !== password) {
+          return NextResponse.json(
+            { error: 'Kredensial tidak valid. Silakan periksa kembali email dan kata sandi Anda.' },
+            { status: 401 }
+          );
+        }
+        targetUser = {
+          id: dbUser.id,
+          email: dbUser.email,
+          nama: dbUser.nama,
+          role: dbUser.role,
+          phone: dbUser.phone || '',
+          assignedWilayah: dbUser.assigned_wilayah || targetUser?.assignedWilayah || 'Seluruh Kepulauan Riau',
+        };
+      } else {
+        return NextResponse.json(
+          { error: 'Kredensial tidak valid. Silakan periksa kembali email dan kata sandi Anda.' },
+          { status: 401 }
+        );
+      }
+    } else {
+      return NextResponse.json(
+        { error: 'Database otentikasi belum terkonfigurasi.' },
+        { status: 503 }
+      );
+    }
+
+    if (!targetUser) {
       return NextResponse.json(
         { error: 'Kredensial tidak valid. Silakan periksa kembali email dan kata sandi Anda.' },
         { status: 401 }
