@@ -6,6 +6,7 @@ import { UserProfile, Survey } from '@/types';
 interface AppContextType {
   currentUser: UserProfile | null;
   availableProfiles: UserProfile[];
+  isLoading: boolean;
   activeTab: 'input' | 'wilayah' | 'kandidat' | 'total' | 'responden' | 'surveys';
   setActiveTab: (tab: 'input' | 'wilayah' | 'kandidat' | 'total' | 'responden' | 'surveys') => void;
   selectedSurveyId: string;
@@ -25,6 +26,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [availableProfiles, setAvailableProfiles] = useState<UserProfile[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'input' | 'wilayah' | 'kandidat' | 'total' | 'responden' | 'surveys'>('wilayah');
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState<string>('survey-kepri-2026');
@@ -62,6 +64,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,6 +85,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     } catch (e) {
       console.error(e);
+      setCurrentUser(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,6 +177,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentUser,
         availableProfiles,
+        isLoading,
         activeTab,
         setActiveTab,
         selectedSurveyId,

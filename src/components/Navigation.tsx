@@ -18,8 +18,8 @@ export const Navigation: React.FC = () => {
   const pathname = usePathname();
   const { activeTab, setActiveTab, currentUser } = useApp();
 
-  // Jangan tampilkan navigasi tab di halaman login
-  if (pathname === '/login') {
+  // Jangan tampilkan navigasi tab di halaman login atau saat belum terotentikasi
+  if (pathname === '/login' || !currentUser) {
     return null;
   }
 

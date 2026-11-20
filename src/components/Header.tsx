@@ -130,8 +130,8 @@ export const Header: React.FC = () => {
             </div>
           </Link>
 
-          {/* Survey Selector Dropdown with Clear Label */}
-          {surveys.length > 0 && (
+          {/* Survey Selector Dropdown with Clear Label (Only for Authenticated Users) */}
+          {currentUser && surveys.length > 0 && (
             <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-xs shadow-inner">
               <FolderKanban className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span className="text-[11px] text-slate-400 hidden xl:inline">Survei:</span>
@@ -154,24 +154,28 @@ export const Header: React.FC = () => {
         {/* Status Indicators & User Profile Controls */}
         <div className="flex items-center justify-between w-full md:w-auto gap-2.5">
           {/* Live Sync Supabase indicator */}
-          <div
-            className="hidden sm:flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-[11px] text-emerald-400"
-            title="Terhubung langsung ke basis data Supabase & terenkripsi"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-medium">Live Sync Supabase</span>
-          </div>
+          {currentUser && (
+            <div
+              className="hidden sm:flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-[11px] text-emerald-400"
+              title="Terhubung langsung ke basis data Supabase & terenkripsi"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-medium">Live Sync Supabase</span>
+            </div>
+          )}
 
           {/* Export Excel Button */}
-          <a
-            href={`/api/export/excel?surveyId=${selectedSurveyId}`}
-            className="flex items-center gap-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm"
-            title="Download Laporan Excel Agregat (Bebas PII/UU PDP)"
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="hidden sm:inline">Export Excel</span>
-            <span className="sm:hidden">Excel</span>
-          </a>
+          {currentUser && (
+            <a
+              href={`/api/export/excel?surveyId=${selectedSurveyId}`}
+              className="flex items-center gap-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm"
+              title="Download Laporan Excel Agregat (Bebas PII/UU PDP)"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden sm:inline">Export Excel</span>
+              <span className="sm:hidden">Excel</span>
+            </a>
+          )}
 
           {/* User Session Dropdown Menu */}
           {currentUser ? (
