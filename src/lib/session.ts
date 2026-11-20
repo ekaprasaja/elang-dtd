@@ -27,6 +27,7 @@ export async function setSessionUser(userId: string): Promise<UserProfile | null
     maxAge: 60 * 60 * 24 * 7, // 7 days
     sameSite: 'lax',
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
   });
 
   return user;
@@ -39,5 +40,6 @@ export async function clearSession(): Promise<void> {
     maxAge: 0,
     sameSite: 'lax',
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
   });
 }
