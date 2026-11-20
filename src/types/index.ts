@@ -5,6 +5,7 @@ export interface UserProfile {
   email: string;
   nama: string;
   role: UserRole;
+  password?: string;
   phone?: string;
   avatar_url?: string;
   assignedWilayah?: string;

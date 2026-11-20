@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     const cleanEmail = email.trim().toLowerCase();
     const targetUser = initialProfiles.find((u) => u.email.toLowerCase() === cleanEmail);
 
-    if (!targetUser) {
+    if (!targetUser || !targetUser.password || targetUser.password !== password) {
       return NextResponse.json(
         { error: 'Kredensial tidak valid. Silakan periksa kembali email dan kata sandi Anda.' },
         { status: 401 }
@@ -26,11 +26,16 @@ export async function POST(req: NextRequest) {
 
     // Set session cookie
     const user = await setSessionUser(targetUser.id);
+    if (!user) {
+      return NextResponse.json({ error: 'Gagal membuat sesi.' }, { status: 500 });
+    }
+
+    const { password: _p, ...safeUser } = user;
 
     return NextResponse.json({
       success: true,
-      user,
-      message: `Berhasil masuk sebagai ${user.nama}`,
+      user: safeUser,
+      message: `Berhasil masuk sebagai ${safeUser.nama}`,
     });
   } catch (error: any) {
     return NextResponse.json(

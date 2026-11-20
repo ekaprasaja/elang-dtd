@@ -23,8 +23,9 @@ export const initialProfiles: UserProfile[] = [
   {
     id: 'usr-admin-dtd',
     email: 'admin@elangdtd.id',
-    nama: 'Bambang Wicaksono (Administrator)',
+    nama: 'Administrator Utama DTD',
     role: 'ADMIN',
+    password: 'Elang-DTD#5821$Admin',
     phone: '081288880001',
     assignedWilayah: 'Seluruh Kepulauan Riau',
   },
@@ -33,6 +34,7 @@ export const initialProfiles: UserProfile[] = [
     email: 'korwil.batam@elangdtd.id',
     nama: 'Ir. Hendra Gunawan (Korwil Batam)',
     role: 'KOORDINATOR',
+    password: 'Elang-DTD#3490$Korwil',
     phone: '081288880002',
     assignedWilayah: 'KOTA BATAM',
   },
@@ -41,16 +43,9 @@ export const initialProfiles: UserProfile[] = [
     email: 'relawan.budi@elangdtd.id',
     nama: 'Budi Santoso (Relawan Belian)',
     role: 'RELAWAN',
+    password: 'Elang-DTD#1824$Relawan',
     phone: '081288880003',
     assignedWilayah: 'TPS 01 - RW 02 Perum Cendana',
-  },
-  {
-    id: 'usr-viewer-riset',
-    email: 'viewer@elangdtd.id',
-    nama: 'Tim Analis & Riset Pusat',
-    role: 'VIEWER',
-    phone: '081288880004',
-    assignedWilayah: 'Nasional (Read-only)',
   },
 ];
 
