@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/session';
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (user.role !== 'ADMIN') {
+    if (!user || user.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Akses ditolak: Hanya Administrator yang berwenang mendekripsi NIK lengkap.' },
         { status: 403 }
