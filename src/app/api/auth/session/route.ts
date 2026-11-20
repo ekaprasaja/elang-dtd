@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser, setSessionUser, clearSession } from '@/lib/session';
-import { initialProfiles } from '@/lib/repository';
 
 export async function GET() {
   const user = await getCurrentUser();
   return NextResponse.json({
     user,
-    availableProfiles: initialProfiles,
   });
 }
 

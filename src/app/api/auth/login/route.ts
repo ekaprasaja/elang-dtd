@@ -5,21 +5,22 @@ import { initialProfiles } from '@/lib/repository';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, email, password } = body;
+    const { email, password } = body;
 
-    let targetUser = null;
-
-    if (userId) {
-      targetUser = initialProfiles.find((u) => u.id === userId);
-    } else if (email) {
-      const cleanEmail = email.trim().toLowerCase();
-      targetUser = initialProfiles.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email dan kata sandi wajib diisi.' },
+        { status: 400 }
+      );
     }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const targetUser = initialProfiles.find((u) => u.email.toLowerCase() === cleanEmail);
 
     if (!targetUser) {
       return NextResponse.json(
-        { error: 'Akun tidak ditemukan. Gunakan salah satu email akun demo yang tersedia.' },
-        { status: 404 }
+        { error: 'Kredensial tidak valid. Silakan periksa kembali email dan kata sandi Anda.' },
+        { status: 401 }
       );
     }
 

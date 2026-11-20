@@ -245,52 +245,14 @@ export const Header: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Switch Profile (Demo Simulator) */}
-                  <div className="py-2.5">
-                    <div className="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400 font-semibold px-1 mb-1.5">
-                      <span>Simulasi Peran / Akun Demo:</span>
-                      <span className="text-emerald-400">1-Klik Beralih</span>
-                    </div>
-                    <div className="space-y-1">
-                      {availableProfiles.map((p) => {
-                        const isCurrent = p.id === currentUser.id;
-                        return (
-                          <button
-                            key={p.id}
-                            onClick={() => {
-                              switchProfile(p.id);
-                              setShowProfileDropdown(false);
-                            }}
-                            className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition ${
-                              isCurrent
-                                ? 'bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 font-semibold'
-                                : 'hover:bg-slate-800/80 text-slate-300 hover:text-white'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 truncate">
-                              <span className="text-sm">{getRoleIcon(p.role)}</span>
-                              <div className="truncate">
-                                <p className="truncate text-xs leading-tight">{p.nama}</p>
-                                <span className="text-[9px] text-slate-400 block font-mono">
-                                  {p.role} • {p.email}
-                                </span>
-                              </div>
-                            </div>
-                            {isCurrent && <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-1" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
                   {/* Quick Action Links */}
-                  <div className="pt-2 border-t border-slate-800 space-y-1">
+                  <div className="py-2 space-y-1">
                     <button
                       onClick={() => {
                         setActiveTab('input');
                         setShowProfileDropdown(false);
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left"
+                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
                     >
                       <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
                       <span>Form Input Survei Lapangan</span>
@@ -301,7 +263,7 @@ export const Header: React.FC = () => {
                         setActiveTab('wilayah');
                         setShowProfileDropdown(false);
                       }}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left"
+                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
                     >
                       <MapPin className="w-3.5 h-3.5 text-sky-400" />
                       <span>Dashboard Rekapitulasi Wilayah</span>
@@ -313,7 +275,7 @@ export const Header: React.FC = () => {
                           setActiveTab('responden');
                           setShowProfileDropdown(false);
                         }}
-                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left"
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
                       >
                         <Shield className="w-3.5 h-3.5 text-amber-400" />
                         <span>Data Responden & Audit NIK (Admin)</span>
