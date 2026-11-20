@@ -47,19 +47,19 @@ export default function LoginPage() {
   return (
     <div className="max-w-md mx-auto py-10 sm:py-16 px-4">
       {/* Branding Card */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-emerald-500/30 p-2 shadow-xl shadow-emerald-500/20 mb-4">
+      <div className="flex flex-col items-center text-center mb-8">
+        <div className="w-16 h-16 rounded-2xl bg-slate-900/90 border border-amber-500/30 p-2.5 mx-auto flex items-center justify-center shadow-xl shadow-black/50 mb-3 hover:border-amber-400/50 transition">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-transparent.webp" alt="Logo Partai Elang" className="w-full h-full object-contain" />
+          <img src="/logo-transparent.webp" alt="Logo Partai Elang" className="w-full h-full object-contain filter drop-shadow" />
         </div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-[11px] font-semibold text-emerald-400 mb-2">
-          <Shield className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-[11px] font-semibold text-amber-300 mb-2.5 shadow-sm">
+          <Shield className="w-3.5 h-3.5 text-amber-400" />
           <span>Sistem Resmi Partai Elang Indonesia</span>
         </div>
         <h1 className="text-2xl font-black text-white tracking-tight">
           Masuk Akun Elang DTD
         </h1>
-        <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+        <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
           Aplikasi Door-to-Door verifikasi pemilih, survei preferensi elektoral, dan audit NIK patuh UU PDP.
         </p>
       </div>
