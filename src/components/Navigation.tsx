@@ -10,6 +10,7 @@ import {
   BarChart2,
   ShieldCheck,
   FolderKanban,
+  Sparkles,
 } from 'lucide-react';
 
 export const Navigation: React.FC = () => {
@@ -17,17 +18,53 @@ export const Navigation: React.FC = () => {
   const pathname = usePathname();
   const { activeTab, setActiveTab, currentUser } = useApp();
 
+  // Jangan tampilkan navigasi tab di halaman login
+  if (pathname === '/login') {
+    return null;
+  }
+
   const isAdmin = currentUser?.role === 'ADMIN';
 
   const navItems = [
-    { id: 'input', label: 'Input Survei DTD', icon: Smartphone, highlight: true },
-    { id: 'wilayah', label: 'Dashboard Wilayah', icon: MapPin },
-    { id: 'kandidat', label: 'Kandidat & Word Cloud', icon: Flame },
-    { id: 'total', label: 'Grafik & Total', icon: BarChart2 },
+    {
+      id: 'input',
+      label: 'Input Survei DTD',
+      icon: Smartphone,
+      highlight: true,
+      badge: 'Form Relawan',
+      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    },
+    {
+      id: 'wilayah',
+      label: 'Dashboard Wilayah',
+      icon: MapPin,
+    },
+    {
+      id: 'kandidat',
+      label: 'Kandidat & Word Cloud',
+      icon: Flame,
+    },
+    {
+      id: 'total',
+      label: 'Grafik & Total',
+      icon: BarChart2,
+    },
     ...(isAdmin
       ? [
-          { id: 'responden', label: 'Data Responden & Audit NIK', icon: ShieldCheck },
-          { id: 'surveys', label: 'Kelola Survei', icon: FolderKanban },
+          {
+            id: 'responden',
+            label: 'Data Responden & Audit NIK',
+            icon: ShieldCheck,
+            badge: 'Admin',
+            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+          },
+          {
+            id: 'surveys',
+            label: 'Kelola Survei',
+            icon: FolderKanban,
+            badge: 'Admin',
+            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+          },
         ]
       : []),
   ];
@@ -40,8 +77,8 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-950/80 border-b border-slate-800/80 sticky top-[61px] z-30 px-3 overflow-x-auto">
-      <div className="max-w-7xl mx-auto flex items-center gap-1.5 py-2">
+    <div className="bg-slate-950/80 border-b border-slate-800/80 sticky top-[61px] z-30 px-3 overflow-x-auto scrollbar-none">
+      <div className="max-w-7xl mx-auto flex items-center gap-2 py-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -50,16 +87,27 @@ export const Navigation: React.FC = () => {
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 isActive
                   ? item.highlight
-                    ? 'bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-md shadow-emerald-600/30 font-bold'
-                    : 'bg-slate-800 text-white border border-slate-700 shadow-sm font-bold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                    ? 'bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-md shadow-emerald-600/30 font-bold scale-[1.02]'
+                    : 'bg-slate-800 text-white border border-slate-700 shadow-md font-bold scale-[1.02]'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
               <span>{item.label}</span>
+              {item.badge && (
+                <span
+                  className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase border ${
+                    isActive
+                      ? 'bg-white/20 text-white border-white/30'
+                      : item.badgeColor || 'bg-slate-800 text-slate-400 border-slate-700'
+                  }`}
+                >
+                  {item.badge}
+                </span>
+              )}
             </button>
           );
         })}

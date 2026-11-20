@@ -4,16 +4,20 @@ import { initialProfiles } from './repository';
 
 const SESSION_COOKIE_NAME = 'dtd_session_user_id';
 
-export async function getCurrentUser(): Promise<UserProfile> {
+export async function getCurrentUser(): Promise<UserProfile | null> {
   const cookieStore = await cookies();
   const userId = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+  if (userId === 'guest' || userId === 'logged_out') {
+    return null;
+  }
 
   if (userId) {
     const found = initialProfiles.find((u) => u.id === userId);
     if (found) return found;
   }
 
-  // Default to Admin for comprehensive access
+  // Default to Admin for comprehensive demo access if cookie not set
   return initialProfiles[0];
 }
 
@@ -28,4 +32,13 @@ export async function setSessionUser(userId: string): Promise<UserProfile> {
   });
 
   return user;
+}
+
+export async function clearSession(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, 'logged_out', {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'lax',
+  });
 }

@@ -12,6 +12,9 @@ interface AppContextType {
   setSelectedSurveyId: (id: string) => void;
   surveys: Survey[];
   switchProfile: (userId: string) => Promise<void>;
+  login: (userIdOrEmail: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   notification: string | null;
   setNotification: (msg: string | null) => void;
   refreshSurveys: () => Promise<void>;
@@ -42,6 +45,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const res = await fetch('/api/auth/session');
+      const data = await res.json();
+      if (data.user) {
+        setCurrentUser(data.user);
+        if (data.availableProfiles) {
+          setAvailableProfiles(data.availableProfiles);
+        }
+      } else {
+        setCurrentUser(null);
+        if (data.availableProfiles) {
+          setAvailableProfiles(data.availableProfiles);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const loadSession = async () => {
     try {
       const res = await fetch('/api/auth/session');
@@ -52,6 +75,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (data.user.role === 'RELAWAN') {
           setActiveTab('input');
         }
+      } else {
+        setCurrentUser(null);
+        setAvailableProfiles(data.availableProfiles || []);
       }
     } catch (e) {
       console.error(e);
@@ -74,6 +100,51 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
         setTimeout(() => setNotification(null), 3000);
       }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const login = async (userIdOrEmail: string, password?: string) => {
+    try {
+      const body: any = {};
+      if (userIdOrEmail.startsWith('usr-')) {
+        body.userId = userIdOrEmail;
+      } else {
+        body.email = userIdOrEmail;
+        body.password = password;
+      }
+
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok && data.user) {
+        setCurrentUser(data.user);
+        setNotification(`Selamat datang, ${data.user.nama}`);
+        if (data.user.role === 'RELAWAN') {
+          setActiveTab('input');
+        }
+        setTimeout(() => setNotification(null), 3000);
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Login gagal' };
+    } catch (e: any) {
+      return { success: false, error: e.message || 'Terjadi kesalahan sistem' };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/session', { method: 'DELETE' });
+      setCurrentUser(null);
+      setNotification('Anda telah berhasil keluar');
+      setTimeout(() => {
+        setNotification(null);
+        window.location.href = '/login';
+      }, 400);
     } catch (e) {
       console.error(e);
     }
@@ -105,6 +176,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedSurveyId,
         surveys,
         switchProfile,
+        login,
+        logout,
+        refreshUser,
         notification,
         setNotification,
         refreshSurveys,

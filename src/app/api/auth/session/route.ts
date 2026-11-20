@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser, setSessionUser } from '@/lib/session';
+import { getCurrentUser, setSessionUser, clearSession } from '@/lib/session';
 import { initialProfiles } from '@/lib/repository';
 
 export async function GET() {
@@ -20,5 +20,17 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Gagal mengubah sesi' }, { status: 400 });
+  }
+}
+
+export async function DELETE() {
+  try {
+    await clearSession();
+    return NextResponse.json({
+      success: true,
+      message: 'Sesi berhasil diakhiri',
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Gagal keluar' }, { status: 500 });
   }
 }
