@@ -95,10 +95,17 @@ export const Header: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-bold text-sm tracking-wide text-white group-hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  ELANG DTD <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-semibold uppercase">Door to Door</span>
+                  ELANG DTD{' '}
+                  <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-semibold uppercase">
+                    {currentUser?.role === 'ADMIN' ? 'Admin Dashboard' : 'Aplikasi Input'}
+                  </span>
                 </h1>
               </div>
-              <p className="text-[10px] text-slate-400">Monitoring Survei Pemilih & Elektoral Real-Time</p>
+              <p className="text-[10px] text-slate-400">
+                {currentUser?.role === 'ADMIN'
+                  ? 'Monitoring Survei Pemilih & Elektoral Real-Time'
+                  : 'Aplikasi Khusus Petugas Input Survei Lapangan'}
+              </p>
             </div>
           </Link>
 
@@ -136,8 +143,8 @@ export const Header: React.FC = () => {
             </div>
           )}
 
-          {/* Export Excel Button */}
-          {currentUser && (
+          {/* Export Excel Button (Admin Only) */}
+          {currentUser && currentUser.role === 'ADMIN' && (
             <a
               href={`/api/export/excel?surveyId=${selectedSurveyId}`}
               className="flex items-center gap-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-sm"
@@ -234,28 +241,30 @@ export const Header: React.FC = () => {
                       <span>Form Input Survei Lapangan</span>
                     </button>
 
-                    <button
-                      onClick={() => {
-                        setActiveTab('wilayah');
-                        setShowProfileDropdown(false);
-                      }}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
-                    >
-                      <MapPin className="w-3.5 h-3.5 text-sky-400" />
-                      <span>Dashboard Rekapitulasi Wilayah</span>
-                    </button>
-
                     {currentUser.role === 'ADMIN' && (
-                      <button
-                        onClick={() => {
-                          setActiveTab('responden');
-                          setShowProfileDropdown(false);
-                        }}
-                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
-                      >
-                        <Shield className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Data Responden & Audit NIK (Admin)</span>
-                      </button>
+                      <>
+                        <button
+                          onClick={() => {
+                            setActiveTab('wilayah');
+                            setShowProfileDropdown(false);
+                          }}
+                          className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
+                        >
+                          <MapPin className="w-3.5 h-3.5 text-sky-400" />
+                          <span>Dashboard Rekapitulasi Wilayah</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setActiveTab('responden');
+                            setShowProfileDropdown(false);
+                          }}
+                          className="w-full flex items-center gap-2 px-2.5 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-left cursor-pointer"
+                        >
+                          <Shield className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Data Responden & Audit NIK (Admin)</span>
+                        </button>
+                      </>
                     )}
                   </div>
 

@@ -42,6 +42,18 @@ export default function HomePage() {
     );
   }
 
+  const isAdmin = currentUser.role === 'ADMIN';
+
+  // RELAWAN / PETUGAS INPUT HANYA BISA MELIHAT APLIKASI INPUT (DASHBOARD DIKUNCI KHUSUS ADMIN)
+  if (!isAdmin) {
+    return (
+      <div className="w-full transition-opacity duration-300">
+        <VolunteerInputView />
+      </div>
+    );
+  }
+
+  // ADMINISTRATOR DAPAT MEMILIH DASHBOARD ATAU MODE INPUT
   const renderActiveView = () => {
     switch (activeTab) {
       case 'input':

@@ -10,7 +10,6 @@ import {
   BarChart2,
   ShieldCheck,
   FolderKanban,
-  Sparkles,
 } from 'lucide-react';
 
 export const Navigation: React.FC = () => {
@@ -25,15 +24,13 @@ export const Navigation: React.FC = () => {
 
   const isAdmin = currentUser?.role === 'ADMIN';
 
+  // JIKA BUKAN ADMIN (RELAWAN / PETUGAS INPUT):
+  // SEMBUNYIKAN NAVIGATION BAR DASHBOARD KARENA APLIKASI INPUT HANYA UNTUK INPUT
+  if (!isAdmin) {
+    return null;
+  }
+
   const navItems = [
-    {
-      id: 'input',
-      label: 'Input Survei DTD',
-      icon: Smartphone,
-      highlight: true,
-      badge: 'Form Relawan',
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-    },
     {
       id: 'wilayah',
       label: 'Dashboard Wilayah',
@@ -49,24 +46,28 @@ export const Navigation: React.FC = () => {
       label: 'Grafik & Total',
       icon: BarChart2,
     },
-    ...(isAdmin
-      ? [
-          {
-            id: 'responden',
-            label: 'Data Responden & Audit NIK',
-            icon: ShieldCheck,
-            badge: 'Admin',
-            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-          },
-          {
-            id: 'surveys',
-            label: 'Kelola Survei',
-            icon: FolderKanban,
-            badge: 'Admin',
-            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-          },
-        ]
-      : []),
+    {
+      id: 'responden',
+      label: 'Data Responden & Audit NIK',
+      icon: ShieldCheck,
+      badge: 'Admin',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    },
+    {
+      id: 'surveys',
+      label: 'Kelola Survei',
+      icon: FolderKanban,
+      badge: 'Admin',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    },
+    {
+      id: 'input',
+      label: '📱 Form Input Relawan',
+      icon: Smartphone,
+      highlight: true,
+      badge: 'Mode Input',
+      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    },
   ];
 
   const handleTabClick = (tabId: string) => {

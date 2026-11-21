@@ -53,6 +53,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await res.json();
       if (data.user) {
         setCurrentUser(data.user);
+        if (data.user.role !== 'ADMIN') {
+          setActiveTab('input');
+        }
         if (data.availableProfiles) {
           setAvailableProfiles(data.availableProfiles);
         }
@@ -76,7 +79,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (data.user) {
         setCurrentUser(data.user);
         setAvailableProfiles(data.availableProfiles || []);
-        if (data.user.role === 'RELAWAN') {
+        if (data.user.role !== 'ADMIN') {
           setActiveTab('input');
         }
       } else {
@@ -102,7 +105,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (data.user) {
         setCurrentUser(data.user);
         setNotification(`Beralih ke: ${data.user.nama} (${data.user.role})`);
-        if (data.user.role === 'RELAWAN') {
+        if (data.user.role !== 'ADMIN') {
           setActiveTab('input');
         }
         setTimeout(() => setNotification(null), 3000);
@@ -131,7 +134,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.ok && data.user) {
         setCurrentUser(data.user);
         setNotification(`Selamat datang, ${data.user.nama}`);
-        if (data.user.role === 'RELAWAN') {
+        if (data.user.role !== 'ADMIN') {
           setActiveTab('input');
         }
         setTimeout(() => setNotification(null), 3000);
@@ -141,6 +144,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e: any) {
       return { success: false, error: e.message || 'Terjadi kesalahan sistem' };
     }
+  };
+
+  const handleSetActiveTab = (tab: 'input' | 'wilayah' | 'kandidat' | 'total' | 'responden' | 'surveys') => {
+    if (currentUser && currentUser.role !== 'ADMIN' && tab !== 'input') {
+      return; // Cegah relawan/petugas input membuka dashboard
+    }
+    setActiveTab(tab);
   };
 
   const logout = async () => {
@@ -179,7 +189,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         availableProfiles,
         isLoading,
         activeTab,
-        setActiveTab,
+        setActiveTab: handleSetActiveTab,
         selectedSurveyId,
         setSelectedSurveyId,
         surveys,
