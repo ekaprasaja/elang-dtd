@@ -14,6 +14,9 @@ import {
   MapPin,
   HelpCircle,
   Check,
+  Flame,
+  MessageSquare,
+  Zap,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -82,11 +85,24 @@ export const VolunteerInputView: React.FC = () => {
   const [capresAvsP, setCapresAvsP] = useState('Kandidat Garuda');
   const [capresGvsP, setCapresGvsP] = useState('Kandidat Garuda');
 
+  // Mode Selection: Standar Elektoral vs Verifikasi Isu Sentimen
+  const [activeMode, setActiveMode] = useState<'SURVEY' | 'ISSUE_VERIFICATION'>('SURVEY');
+  const [bridges, setBridges] = useState<any[]>([]);
+  const [selectedBridgeId, setSelectedBridgeId] = useState<string>('');
+  const [verifVoterName, setVerifVoterName] = useState('');
+  const [verifVoterAddress, setVerifVoterAddress] = useState('');
+  const [verifAware, setVerifAware] = useState(true);
+  const [verifAccepted, setVerifAccepted] = useState(true);
+  const [verifSentiment, setVerifSentiment] = useState<'POSITIF' | 'NETRAL' | 'NEGATIF'>('POSITIF');
+  const [verifFeedback, setVerifFeedback] = useState('');
+  const [isVerifSubmitting, setIsVerifSubmitting] = useState(false);
+  const [verifSuccessMsg, setVerifSuccessMsg] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmission, setLastSubmission] = useState<{ name: string; maskedNik: string } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Load Wilayah
+  // Load Wilayah & Active Bridges
   useEffect(() => {
     fetch('/api/wilayah')
       .then((res) => res.json())
@@ -97,7 +113,59 @@ export const VolunteerInputView: React.FC = () => {
         }
       })
       .catch((err) => console.error(err));
+
+    fetch('/api/bridge')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.bridges && data.bridges.length > 0) {
+          setBridges(data.bridges);
+          setSelectedBridgeId(data.bridges[0].id);
+        }
+      })
+      .catch((err) => console.error(err));
   }, []);
+
+  const handleVerifSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedBridgeId) {
+      alert('Pilih isu yang ingin diverifikasi');
+      return;
+    }
+
+    try {
+      setIsVerifSubmitting(true);
+      const res = await fetch('/api/bridge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bridge_id: selectedBridgeId,
+          survey_id: selectedSurveyId,
+          voter_name: verifVoterName || 'Warga Responden',
+          voter_address: verifVoterAddress || `${selectedKel}, ${selectedKec}`,
+          is_aware_of_issue: verifAware,
+          accepted_clarification: verifAccepted,
+          voter_sentiment: verifSentiment,
+          voter_feedback: verifFeedback,
+          location_label: `${selectedKel}, ${selectedKec}`,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
+        setVerifSuccessMsg('Verifikasi Opini Warga Berhasil Dikirim ke Radar Pusat!');
+        setVerifFeedback('');
+        setVerifVoterName('');
+        setVerifVoterAddress('');
+      } else {
+        alert(data.error || 'Gagal mengirim verifikasi');
+      }
+    } catch (err: any) {
+      alert(err.message || 'Terjadi kesalahan');
+    } finally {
+      setIsVerifSubmitting(false);
+    }
+  };
 
   // Filtered dropdowns
   const availableKec = hierarchy.kecamatan.filter((k) => k.kabupaten_kota_id === selectedKab);
@@ -236,7 +304,260 @@ export const VolunteerInputView: React.FC = () => {
         </div>
       )}
 
-      {/* Main Form */}
+      {/* Mode Switcher: Survei Elektoral vs Verifikasi Isu Sentimen */}
+      <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs font-semibold">
+        <button
+          type="button"
+          onClick={() => setActiveMode('SURVEY')}
+          className={`flex-1 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+            activeMode === 'SURVEY'
+              ? 'bg-emerald-600 text-white shadow-md'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Smartphone className="w-4 h-4" />
+          <span>Survei Elektoral Pemilih (TPS/NIK)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveMode('ISSUE_VERIFICATION')}
+          className={`flex-1 py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition ${
+            activeMode === 'ISSUE_VERIFICATION'
+              ? 'bg-gradient-to-r from-red-600 to-amber-600 text-white shadow-md shadow-amber-500/20'
+              : 'text-amber-400 hover:text-amber-300'
+          }`}
+        >
+          <Flame className="w-4 h-4 text-amber-300 fill-amber-300" />
+          <span>🔥 Verifikasi Isu Sentimen ({bridges.length})</span>
+        </button>
+      </div>
+
+      {/* MODE 2: FORM VERIFIKASI ISU SENTIMEN LAPANGAN */}
+      {activeMode === 'ISSUE_VERIFICATION' ? (
+        <div className="space-y-4 animate-scale-in">
+          {verifSuccessMsg && (
+            <div className="p-3.5 bg-emerald-950/80 border border-emerald-500/50 rounded-2xl text-xs flex items-center justify-between text-emerald-300">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{verifSuccessMsg}</span>
+              </div>
+              <button onClick={() => setVerifSuccessMsg(null)} className="text-emerald-400 hover:text-white">✕</button>
+            </div>
+          )}
+
+          <div className="bg-slate-900/90 p-5 rounded-3xl border border-amber-500/30 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <Flame className="w-5 h-5 text-amber-400" />
+                <div>
+                  <h3 className="font-bold text-white text-sm">Verifikasi Lapangan Isu Sentimen Media</h3>
+                  <p className="text-[11px] text-slate-400">Hubungkan fakta nyata warga di TPS dengan radar intelijen sentimen pusat</p>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-full font-bold">
+                Event Bridge Aktif
+              </span>
+            </div>
+
+            <form onSubmit={handleVerifSubmit} className="space-y-4 text-xs">
+              {/* Pilih Isu */}
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">
+                  Pilih Isu Hangat yang Sedang Diverifikasi di Wilayah Anda <span className="text-rose-400">*</span>
+                </label>
+                <select
+                  value={selectedBridgeId}
+                  onChange={(e) => setSelectedBridgeId(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-amber-500 font-medium"
+                >
+                  {bridges.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      [{b.issue_region}] {b.issue_topic} ({b.burst_ratio}x tren)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Box Rincian Pertanyaan Lapangan & Klarifikasi */}
+              {(() => {
+                const curBridge = bridges.find((b) => b.id === selectedBridgeId) || bridges[0];
+                if (!curBridge) return null;
+                return (
+                  <div className="p-3.5 bg-slate-950/70 border border-slate-800 rounded-2xl space-y-2">
+                    <div className="text-[11px] font-bold text-sky-400 flex items-center gap-1.5">
+                      <HelpCircle className="w-3.5 h-3.5" />
+                      <span>Pertanyaan yang Ditanyakan ke Pemilih:</span>
+                    </div>
+                    <p className="text-xs text-white leading-relaxed pl-5 font-medium">
+                      &ldquo;{curBridge.field_question}&rdquo;
+                    </p>
+
+                    <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5 pt-2 border-t border-slate-800/80">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Poin Klarifikasi Partai Elang yang Harus Disampaikan Relawan:</span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed pl-5">
+                      {curBridge.narrative_guide}
+                    </p>
+                  </div>
+                );
+              })()}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Nama Warga / Responden</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Pak Slamet / Ibu Wahyu"
+                    value={verifVoterName}
+                    onChange={(e) => setVerifVoterName(e.target.value)}
+                    required
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Lokasi RT/RW / Dusun</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: RT 03/RW 02, Belian"
+                    value={verifVoterAddress}
+                    onChange={(e) => setVerifVoterAddress(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              {/* Status Pemilih terhadap Isu */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1.5">
+                  <label className="block text-slate-300 font-semibold">Apakah warga pernah mendengar isu/kabar ini?</label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setVerifAware(true)}
+                      className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition ${
+                        verifAware ? 'bg-amber-600 text-white' : 'bg-slate-900 text-slate-400'
+                      }`}
+                    >
+                      Pernah Dengar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVerifAware(false)}
+                      className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition ${
+                        !verifAware ? 'bg-slate-800 text-white' : 'bg-slate-900 text-slate-400'
+                      }`}
+                    >
+                      Belum Tahu
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1.5">
+                  <label className="block text-slate-300 font-semibold">Respon terhadap penjelasan klarifikasi:</label>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVerifAccepted(true);
+                        setVerifSentiment('POSITIF');
+                      }}
+                      className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition ${
+                        verifAccepted ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-slate-400'
+                      }`}
+                    >
+                      Menerima Positif
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVerifAccepted(false);
+                        setVerifSentiment('NEGATIF');
+                      }}
+                      className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition ${
+                        !verifAccepted ? 'bg-rose-600 text-white' : 'bg-slate-900 text-slate-400'
+                      }`}
+                    >
+                      Ragu / Menolak
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sentimen Riil Warga */}
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">
+                  Sentimen Nyata Warga di Lapangan
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setVerifSentiment('POSITIF')}
+                    className={`py-2 rounded-xl font-bold text-xs transition ${
+                      verifSentiment === 'POSITIF'
+                        ? 'bg-emerald-500 text-slate-950 font-black shadow-lg shadow-emerald-500/20'
+                        : 'bg-slate-950 text-slate-400 border border-slate-800'
+                    }`}
+                  >
+                    POSITIF (Mendukung)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVerifSentiment('NETRAL')}
+                    className={`py-2 rounded-xl font-bold text-xs transition ${
+                      verifSentiment === 'NETRAL'
+                        ? 'bg-amber-500 text-slate-950 font-black shadow-lg shadow-amber-500/20'
+                        : 'bg-slate-950 text-slate-400 border border-slate-800'
+                    }`}
+                  >
+                    NETRAL (Menyimak)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVerifSentiment('NEGATIF')}
+                    className={`py-2 rounded-xl font-bold text-xs transition ${
+                      verifSentiment === 'NEGATIF'
+                        ? 'bg-rose-500 text-white font-black shadow-lg shadow-rose-500/20'
+                        : 'bg-slate-950 text-slate-400 border border-slate-800'
+                    }`}
+                  >
+                    NEGATIF (Kritis)
+                  </button>
+                </div>
+              </div>
+
+              {/* Catatan / Aspirasi Langsung */}
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">
+                  Catatan / Kutipan Aspirasi Langsung Warga (Feedback Lapangan)
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Tuliskan apa yang diucapkan warga saat dijelaskan tentang isu ini..."
+                  value={verifFeedback}
+                  onChange={(e) => setVerifFeedback(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isVerifSubmitting}
+                className="w-full py-3 bg-gradient-to-r from-red-600 via-amber-600 to-emerald-600 hover:opacity-95 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isVerifSubmitting ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+                <span>Kirim Hasil Verifikasi Lapangan (Event Bridge)</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : (
+      /* Main Form */
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         {/* Section 1: Wilayah Penugasan TPS / RT-RW */}
         <div className="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-3">
@@ -719,6 +1040,7 @@ export const VolunteerInputView: React.FC = () => {
           </button>
         </div>
       </form>
+      )}
     </div>
   );
 };
